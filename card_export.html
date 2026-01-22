@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kartu Pembelajaran</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    body {
+      background: #f2f6fa;
+      font-family: 'Roboto', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .card-container {
+      max-width: 370px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+      padding: 18px;
+    }
+    .main-image {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 14px;
+      position: relative;
+      display: block;
+    }
+    .profile-avatar {
+      position: absolute;
+      left: 34px;
+      bottom: -32px;
+      border: 4px solid #fff;
+      border-radius: 50%;
+      width: 64px;
+      height: 64px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    }
+    .profile-avatar img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .card-content {
+      margin-top: 40px;
+    }
+    .card-content h2 {
+      margin: 0 0 4px 0;
+      font-size: 22px;
+      font-weight: 700;
+      color: #222;
+    }
+    .card-content .kelas {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 12px;
+    }
+    .label {
+      font-weight: 700;
+      font-size: 13px;
+      margin-top: 10px;
+      color: #333;
+    }
+    .value {
+      font-size: 12px;
+      color: #555;
+      margin-bottom: 4px;
+    }
+    .value.green { color: #2e7d32; }
+    .value.red { color: #c62828; }
+    .value.orange { color: #f9a825; }
+    .value.gray { color: #888; }
+    .download-btn {
+      display: block;
+      width: 100%;
+      margin: 24px 0 0 0;
+      padding: 12px;
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .download-btn:hover {
+      background: #125ea2;
+    }
+  </style>
+</head>
+<body>
+  <div id="loadingOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(255,255,255,0.85);z-index:1000;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:bold;">Memuat kartu...</div>
+  <div class="card-container" id="card" style="opacity:0;">
+    <div style="position:relative;">
+      <img id="mainImage" class="main-image" src="https://nafli.or.id/assets/DSC05612.jpeg" alt="Main Image">
+      <div class="profile-avatar" style="position:absolute; left:34px; bottom:-32px;">
+        <img id="profileImage" src="https://nafli.or.id/assets/profil.jpg" alt="Profile">
+      </div>
+    </div>
+    <div class="card-content">
+      <h2 id="nama">Nama Siswa</h2>
+      <div class="kelas" id="kelas">Kelas: -</div>
+      <div class="label">Waktu Kehadiran:</div>
+      <div class="value" id="datang">Datang : -</div>
+      <div class="value gray" id="pulang">Pulang : -</div>
+      <div class="label">Pembelajaran Hari Ini:</div>
+      <div class="value" id="tanggalPembelajaran" style="color:#607d8b; font-size:12px; margin-bottom:0;">-</div>
+      <div class="value" id="pembelajaran">-</div>
+      <div class="label">Pengamatan Harian:</div>
+      <div class="value" id="pengamatan">-</div>
+    </div>
+    <div style="text-align:center; margin-top:18px; font-size:13px; color:#888; display:flex; align-items:center; justify-content:center; gap:6px;">
+      <span>Sinergi by Nafli School</span>
+      <img src="https://nafli.or.id/assets/logo.PNG" alt="Nafli School Logo" style="height:22px; vertical-align:middle; border-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+    </div>
+    <button class="download-btn hide-for-capture" id="downloadBtn" onclick="downloadCard()">Download Gambar</button>
+  </div>
+  </div>
+  <script>
+    // Hide download button before capture
+    function hideDownloadBtn() {
+      document.getElementById('downloadBtn').style.display = 'none';
+    }
+    function showDownloadBtn() {
+      document.getElementById('downloadBtn').style.display = 'block';
+    }
+
+    // Wait for all images to load
+    function waitForImages(callback) {
+      var mainImg = document.getElementById('mainImage');
+      var profileImg = document.getElementById('profileImage');
+      var loaded = 0;
+      var total = 2;
+      function check() {
+        loaded++;
+        if (loaded >= total) callback();
+      }
+      mainImg.onload = check;
+      mainImg.onerror = function(e) {
+        console.error('Main image failed to load', mainImg.src, e);
+        check();
+      };
+      profileImg.onload = check;
+      profileImg.onerror = function(e) {
+        console.error('Profile image failed to load', profileImg.src, e);
+        check();
+      };
+      // If already loaded (from cache), fire manually
+      if (mainImg.complete) mainImg.onload();
+      if (profileImg.complete) profileImg.onload();
+    }
+
+    // Set card data from Flutter
+    function setCardData(data) {
+      console.log('setCardData called with:', data);
+      document.getElementById('mainImage').src = data.imageUrl || document.getElementById('mainImage').src;
+      document.getElementById('profileImage').src = data.profileImageUrl || document.getElementById('profileImage').src;
+      document.getElementById('nama').textContent = data.nama || 'Nama Siswa';
+      document.getElementById('kelas').textContent = 'Kelas: ' + (data.kelasStr || '-');
+      document.getElementById('datang').textContent = 'Datang : ' + (data.datang || '-');
+      document.getElementById('pulang').textContent = 'Pulang : ' + (data.pulang || '-');
+      // Set formatted date after 'Pembelajaran Hari Ini:'
+      // Try to get date from data, fallback to today
+      var dateStr = data.formattedDate;
+      if (!dateStr) {
+        // Try to infer from parent if not provided
+        var today = new Date();
+        var options = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+        dateStr = today.toLocaleDateString('id-ID', options);
+      }
+      document.getElementById('tanggalPembelajaran').textContent = dateStr;
+      document.getElementById('pembelajaran').textContent = data.pembelajaranHariIni || '-';
+      document.getElementById('pengamatan').textContent = data.pengamatanHarian || '-';
+      // Color for datang
+      var datangElem = document.getElementById('datang');
+      datangElem.classList.remove('green', 'red', 'orange', 'gray');
+      if (data.datangColor === 'green') datangElem.classList.add('green');
+      else if (data.datangColor === 'red') datangElem.classList.add('red');
+      else if (data.datangColor === 'orange') datangElem.classList.add('orange');
+      else datangElem.classList.add('gray');
+
+      // Wait for images, then show card
+      waitForImages(function() {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('card').style.opacity = 1;
+      });
+    }
+
+    // Listen for postMessage from Flutter
+    let cardDataReceived = false;
+    window.addEventListener('message', function(event) {
+      console.log('Received postMessage:', event);
+      if (event.data && typeof event.data === 'object') {
+        setCardData(event.data);
+        cardDataReceived = true;
+      }
+    });
+
+    // If no postMessage received, try to get card data from URL params (for iOS/iPadOS Safari)
+    function getCardDataFromParams() {
+      const url = new URL(window.location.href);
+      const params = url.searchParams;
+      if (params.has('nama')) {
+        return {
+          nama: params.get('nama'),
+          kelasStr: params.get('kelasStr'),
+          imageUrl: params.get('imageUrl'),
+          profileImageUrl: params.get('profileImageUrl'),
+          datang: params.get('datang'),
+          pulang: params.get('pulang'),
+          pembelajaranHariIni: params.get('pembelajaranHariIni'),
+          pengamatanHarian: params.get('pengamatanHarian'),
+          datangColor: params.get('datangColor'),
+          formattedDate: params.get('formattedDate'),
+        };
+      }
+      return null;
+    }
+
+    window.onload = function() {
+      console.log('card_export.html loaded');
+      // Handshake: notify opener that card_export.html is ready
+      if (window.opener && window.opener !== window) {
+        try {
+          window.opener.postMessage({type: 'cardExportReady'}, window.location.origin);
+          console.log('Sent cardExportReady to opener');
+        } catch (e) { console.error('Failed to send cardExportReady to opener', e); }
+      }
+      // Immediately load card data from URL params if present
+      const cardData = getCardDataFromParams();
+      if (cardData) {
+        setCardData(cardData);
+        cardDataReceived = true;
+      } else {
+        // If no postMessage received after short delay, show error
+        setTimeout(function() {
+          if (!cardDataReceived) {
+            document.getElementById('loadingOverlay').innerHTML = 'Gagal memuat kartu.<br><span style="font-size:16px;color:#c00">Tidak ada data yang diterima.<br>Periksa koneksi, popup, dan parameter URL.</span><br><span style="font-size:12px;color:#888">URL: ' + window.location.href + '</span>';
+            document.getElementById('loadingOverlay').style.display = 'flex';
+            document.getElementById('card').style.opacity = 0;
+            console.error('No card data received. URL:', window.location.href);
+          }
+        }, 1000);
+      }
+    };
+
+    // Download card as image
+function downloadCard() {
+  hideDownloadBtn();
+  waitForImages(function() {
+    html2canvas(document.getElementById('card'), {backgroundColor: null, useCORS: true}).then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'sinergi_card_' + Date.now() + '.png';
+      link.href = canvas.toDataURL();
+      link.click();
+      showDownloadBtn();
+    });
+  });
+}
+    // Optionally: auto-fill from URL params
+    function getParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+    // If you want to support URL param passing, uncomment below:
+    
+    setCardData({
+      nama: getParam('nama'),
+      kelasStr: getParam('kelas'),
+      imageUrl: getParam('imageUrl'),
+      profileImageUrl: getParam('profileImageUrl'),
+      datang: getParam('datang'),
+      pulang: getParam('pulang'),
+      pembelajaranHariIni: getParam('pembelajaran'),
+      pengamatanHarian: getParam('pengamatan'),
+      datangColor: getParam('datangColor') // 'green', 'red', 'orange', 'gray'
+    });
+    
+    // ...existing code...
+  </script>
+</body>
+</html>

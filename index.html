@@ -16,27 +16,70 @@
   -->
   <!-- <base href="/"> -->
 
-  <meta charset="UTF-8">
-  <!-- Replace the CLIENT_ID below with your OAuth web client ID
-    (e.g. from Google Cloud Console / Firebase project settings).
-    Example value ends with `.apps.googleusercontent.com`. -->
   <meta name="google-signin-client_id" content="431097691954-ssm2hchvgsbq0162klvnsga5ho10b8qv.apps.googleusercontent.com">
+
+  <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="Sinergi bersama untuk perkembangan anak">
 
   <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="sinergi_teachers">
+  <meta name="apple-mobile-web-app-title" content="Sinergi">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>Sinergi-Teachers</title>
+  <title>Sinergi</title>
   <link rel="manifest" href="manifest.json">
+
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = "1478206636";
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
 </head>
 <body>
-  <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('load', function(ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+
+  
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-app.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/8.6.1/firebase-auth.js"></script> 
+
+<script> 
+  // paste the code copied  
+  // from Firebase SDK below. 
+  const firebaseConfig = { 
+    apiKey: "AIzaSyCh4VkNpWF_mKZ9wdzMzQ7bwpnCzbax3ko", 
+    authDomain: "sinergi-belajar.firebaseapp.com", 
+    projectId: "sinergi-belajar", 
+    storageBucket: "sinergi-belajar.appspot.com", 
+    messagingSenderId: "431097691954", 
+    appId: "1:431097691954:web:bdf269c454a42cafcd212b", 
+    measurementId: "G-GHNXF1YHZX" 
+  }; 
+
+  // Initialize Firebase 
+  const app = initializeApp(firebaseConfig); 
+  const analytics = getAnalytics(app); 
+    
+</script>
+
 </body>
 </html>
