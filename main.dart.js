@@ -110630,40 +110630,41 @@ $0(){A.bE(this.a,!1).ci(!1)
 return null},
 $S:0}
 A.aKi.prototype={
-$0(){var s=0,r=A.E(t.H),q,p=2,o=[],n=this,m,l,k,j,i,h,g,f,e,d,c,b
-var $async$$0=A.A(function(a,a0){if(a===1){o.push(a0)
-s=p}for(;;)switch(s){case 0:c=n.c.gL()
-c=c==null?null:c.lc()
-if(c!==!0){s=1
+$0(){var s=0,r=A.E(t.H),q,p=2,o=[],n=this,m,l,k,j,i,h,g,f,e,d,c,b,a
+var $async$$0=A.A(function(a0,a1){if(a0===1){o.push(a1)
+s=p}for(;;)switch(s){case 0:b=n.c.gL()
+b=b==null?null:b.lc()
+if(b!==!0){s=1
 break}m=B.c.co(n.d.a.a)
 l=B.c.co(n.e.a.a)
 k=B.c.co(n.f.a.a)
 j=B.c.co(n.r.a.a)
 i=B.c.co(n.w.a.a)
 h=B.c.co(n.x.a.a)
+b=n.a
+g=b.b?"true":"false"
 p=4
-c=n.a
-f=t.K
-e=n.b.d
+e=t.K
+d=n.b.d
 s=n.y?7:9
 break
 case 7:s=10
-return A.x(e.D(0,A.a9(["Nama",l,"Nama Panggilan",m,"Kelas",k,"imgUrl",j,"ID_Finger",i,"enabled",c.a,"msg",h,"isBus",c.b],t.N,f)),$async$$0)
+return A.x(d.D(0,A.a9(["Nama",l,"Nama Panggilan",m,"Kelas",k,"imgUrl",j,"ID_Finger",i,"enabled",b.a,"msg",h,"isBus",g],t.N,e)),$async$$0)
 case 10:s=8
 break
-case 9:e=e.cq(B.b.gO(n.z.b.b.a))
-f=A.Ks(A.a9(["Nama",l,"Nama Panggilan",m,"Kelas",k,"imgUrl",j,"ID_Finger",i,"enabled",c.a,"msg",h,"isBus",c.b],f,t.X))
-f.toString
+case 9:d=d.cq(B.b.gO(n.z.b.b.a))
+e=A.Ks(A.a9(["Nama",l,"Nama Panggilan",m,"Kelas",k,"imgUrl",j,"ID_Finger",i,"enabled",b.a,"msg",h,"isBus",g],e,t.X))
+e.toString
 s=11
-return A.x(e.a.bL(0,f),$async$$0)
+return A.x(d.a.bL(0,e),$async$$0)
 case 11:case 8:A.bE(n.Q,!1).ci(!0)
 p=2
 s=6
 break
 case 4:p=3
-b=o.pop()
-g=A.ac(b)
-n.as.R(t.q).f.c_(A.cQ(null,null,null,null,null,B.q,null,A.y("Gagal menyimpan: "+A.m(g),null,null,null,null,null,null,null),null,B.R,null,null,null,null,null,null,null,null,null,null))
+a=o.pop()
+f=A.ac(a)
+n.as.R(t.q).f.c_(A.cQ(null,null,null,null,null,B.q,null,A.y("Gagal menyimpan: "+A.m(f),null,null,null,null,null,null,null),null,B.R,null,null,null,null,null,null,null,null,null,null))
 s=6
 break
 case 3:s=2
